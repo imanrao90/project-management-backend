@@ -3,6 +3,7 @@ import 'dotenv/config'
 import cors from 'cors'
 import { clerkMiddleware } from '@clerk/express'
 import { serve } from "inngest/express";
+import serverless from 'serverless-http';
 import { inngest, functions } from "./inngest/index.js"
 
 
@@ -16,6 +17,9 @@ app.get('/', (req, res) => res.send('Server is live!'))
 
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
-const PORT = process.env.PORT || 5000
+// const PORT = process.env.PORT || 5000
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+
+// Export as serverless function
+export default serverless(app);
