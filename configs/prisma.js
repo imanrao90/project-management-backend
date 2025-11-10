@@ -3,16 +3,12 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaNeon } from '@prisma/adapter-neon';
 import { neonConfig } from '@neondatabase/serverless';
 
-import ws from 'ws';
-neonConfig.webSocketConstructor = ws;
+// Use fetch-based pooling in serverless instead of WebSockets
+neonConfig.poolQueryViaFetch = true;
 
-// To work in edge environments (Cloudflare Workers, Vercel Edge, etc.), enable querying over fetch
-// neonConfig.poolQueryViaFetch = true
-
-// Type definitions
-// declare global {
-//   var prisma: PrismaClient | undefined
-// }
+// You can remove WebSocket constructor for serverless
+// import ws from 'ws';
+// neonConfig.webSocketConstructor = ws;
 
 const connectionString = `${process.env.DATABASE_URL}`;
 
