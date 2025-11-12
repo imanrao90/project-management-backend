@@ -41,11 +41,11 @@ export const addMember = async (req, res) => {
     }
 
     if (!workspaceId || !role) {
-      return res.status(404).json({ message: 'Missing required parameters' })
+      return res.status(400).json({ message: 'Missing required parameters' })
     }
 
     if (!["ADMIN", "MEMBER"].includes(role)) {
-      return res.status(404).json({ message: 'Invalid role' })
+      return res.status(400).json({ message: 'Invalid role' })
     }
 
     // fetch workspace
@@ -57,14 +57,14 @@ export const addMember = async (req, res) => {
 
     // check creator has admin role
     if (!workspace.members.find((member) => member.userId === userId && member.role === 'ADMIN')) {
-      return res.status(404).json({ message: 'You do not have admin priviliges' })
+      return res.status(401).json({ message: 'You do not have admin priviliges' })
     }
 
     // check if user is already a member
     const existingMember = workspace.members.find((member) => member.userId === userId)
 
     if (existingMember) {
-      return res.status(404).json({ message: 'User is already a member' })
+      return res.status(400).json({ message: 'User is already a member' })
     }
 
     const member = await prisma.workspaceMember.create({
@@ -76,7 +76,7 @@ export const addMember = async (req, res) => {
       }
     })
 
-    res.json({ member, message: 'User added successfully' })
+    res.json({ member, message: 'Member added successfully' })
 
   } catch (error) {
     console.log(error)
